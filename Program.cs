@@ -49,7 +49,7 @@ Console.WriteLine(diapazon);  */
 
 
 
-int createnumber(int leftbond, int rightbound) //Загадает число в указанном диапазоне и вернет его нам
+/* int createnumber(int leftbond, int rightbound) //Загадает число в указанном диапазоне и вернет его нам
 {
     int number = new Random().Next(leftbond, rightbound);
     return number;
@@ -104,4 +104,146 @@ if (countAtempts==0)
 }
 
 
+ */
 
+/* int createnumber(int start, int finish)
+{   
+    int result = 0;
+    result = new Random().Next(start, finish);
+    return result;
+}
+
+int answernumber()
+{   
+    string inputdata= string.Empty;
+    bool test = true;
+    do
+    {
+    inputdata = Console.ReadLine()!;
+    test = (String.IsNullOrEmpty(inputdata)||!(Int32.TryParse(inputdata, out int value)));
+    } while (test);
+    return Convert.ToInt32(inputdata);
+}
+
+int prob=3;
+int playersNumber=0;
+
+int secretnumber= createnumber(2, 5);
+Console.WriteLine(secretnumber);
+
+do
+{
+    playersNumber= answernumber();
+    if (playersNumber==secretnumber)
+    {
+        Console.WriteLine("ВЫЙГРАЛ");
+        break;
+    }
+    else
+    {   
+        prob-=1;
+        if (playersNumber<secretnumber)
+        {
+            Console.WriteLine($"Число меньше загаданого, осталось попыток = {prob}");
+        }
+        else
+        {
+            Console.WriteLine($"Число больше загаданого, осталось попыток = {prob}");
+        }
+    }
+} while (prob>0||playersNumber==secretnumber);
+
+if (prob==0)
+{
+    Console.WriteLine("Вы проиграли");
+}
+ */
+
+
+int createnumber(int start, int finish) // Метод загадывания числа компьютером
+{   
+    return new Random().Next(start, finish); 
+}
+
+int requestnumber() // Ввод и проверка числа введенного игроком
+{
+bool notexit = true;
+string s= string.Empty;
+while (notexit)
+{
+     Console.WriteLine("Введите число: ");
+     s= Console.ReadLine()!;
+
+     notexit=false;
+     foreach (char c in s)
+         if (!(c>='0' && c<='9'))
+         {
+             notexit=true;
+             break;
+         }
+            if (notexit)
+            Console.WriteLine("Ощибка ввода числа.Повторите ввод.");
+
+}
+return Int32.Parse(s);
+}
+
+bool MakeMove(int secretnumber, int countAtempts)
+{
+    int playersNumber = requestnumber();
+    if (playersNumber==secretnumber)
+    {
+        Console.WriteLine($"Вы угадали число {secretnumber} и у Вас осталось {countAtempts} попыток");
+        return true;
+    }
+    else
+    {
+        countAtempts--;
+        if (countAtempts>0)
+        {
+            if (playersNumber>secretnumber)
+            {
+                Console.WriteLine($"Загаданное число меньше {playersNumber}");
+            }
+            else
+            {
+                Console.WriteLine($"Загаданное число больше {playersNumber}");
+            }
+            Console.WriteLine($"У вас осталось попыток {countAtempts}");
+        }
+        else
+        Console.WriteLine("Попытки закончились");
+        return false;
+    }
+}
+
+void WriteRules(int min, int max, int count) // Описание правил
+{
+    Console.WriteLine("Компьютер загадал число от " + min + " до " + max);
+    Console.WriteLine("Попробуйте угадать за " + count + " попыток ");
+}
+
+void Rungame()
+{
+    //настройка игры
+    int minNum =1;
+    int maxNum =100;
+    int countofattemts=10; //задаем кол-во
+
+    //подготовка игры
+    int secretnumber = createnumber(minNum, maxNum);
+    Console.WriteLine(secretnumber);
+    WriteRules(minNum, maxNum, countofattemts);
+    bool GameResult = false;
+
+    //Основоное тело игры
+
+    while (GameResult==false && countofattemts>0)
+    {
+         GameResult= MakeMove(secretnumber, countofattemts);
+         countofattemts--;
+    }
+
+}
+
+Rungame();
